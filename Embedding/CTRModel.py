@@ -10,7 +10,8 @@ class CTRModel(nn.Module):
         self.embeddings = nn.ModuleList([nn.Embedding(num_embeddings=len(df_train[col].unique()),
                                                       embedding_dim=embedding_dim) for col in categorical_cols_])
         # 下方的输入维度数：连续性+类别型*embed后的维度 （一个类型的特征被embed后从one-hot向量变成了embedding_dim维度的向量）
-        self.linear = nn.Linear(in_features=len(continuous_cols_) + len(categorical_cols_) * embedding_dim, out_features=1)
+        self.linear = nn.Linear(in_features=len(continuous_cols_) + len(categorical_cols_) * embedding_dim,
+                                out_features=1)
 
     def forward(self, x):
         categorical_data = [self.embeddings[i](int(x[:, i])) for i in range(len(self.embeddings))]
