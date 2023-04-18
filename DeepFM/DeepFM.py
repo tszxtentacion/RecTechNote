@@ -9,10 +9,8 @@ class DeepFM(nn.Module):
         self.hidden_dim = hidden_dim
         # linear
         self.linear = nn.Linear(num_features, 1)
-
         # FM
         self.fm_embedding = nn.Embedding(num_features, self.embedding_dim)
-
         # Deep
         self.deep_embedding = nn.Embedding(num_features, self.hidden_dim)
         self.deep_layers = nn.Sequential(
@@ -28,7 +26,6 @@ class DeepFM(nn.Module):
     def forward(self, x):
         # linear
         linear_output = self.linear(x)
-
         # FM
         # 公式中的<w, x>
         fm_embedding = self.fm_embedding(x)
@@ -36,11 +33,9 @@ class DeepFM(nn.Module):
         fm_embedding_sum = torch.sum(fm_embedding, dim=1)
         fm_embedding_square = torch.sum(fm_embedding * fm_embedding, dim=1)
         fm_output = fm_embedding + fm_embedding_sum + fm_embedding_square
-
         # Deep
         deep_embedding = self.deep_embedding(x)
         deep_output = self.deep_layers(torch.sum(deep_embedding, dim=1))
-
         # Output
         output = linear_output + fm_output + deep_output
         output = torch.sigmoid(output)
